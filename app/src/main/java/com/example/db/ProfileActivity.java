@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class ProfileActivity extends AppCompatActivity {
     private TextView userEmail;
     private Button userLogOut;
@@ -29,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        userEmail.setText(firebaseUser.getEmail());
+        userEmail.setText(Objects.requireNonNull(firebaseUser).getEmail());
 
         userLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
