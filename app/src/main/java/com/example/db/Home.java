@@ -15,7 +15,7 @@ public class Home extends Application {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        if (firebaseUser != null){
+        if (firebaseUser != null && firebaseUser.isEmailVerified()){
             startActivity(new Intent(Home.this, ProfileActivity.class));
         }
     }

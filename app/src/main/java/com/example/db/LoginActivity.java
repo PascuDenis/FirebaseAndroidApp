@@ -55,7 +55,11 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                                    if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "Please verify your email address!", Toast.LENGTH_LONG).show();
+                                    }
                                 } else {
                                     Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                                 }

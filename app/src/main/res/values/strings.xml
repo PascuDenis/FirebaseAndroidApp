@@ -5,4 +5,8 @@
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="log_out">Log Out</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="button">Button</string>
+    <string name="send_me_password">Send me password</string>
+    <string name="send_my_password" />
 </resources>

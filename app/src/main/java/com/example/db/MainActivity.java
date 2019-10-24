@@ -3,11 +3,13 @@ package com.example.db;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private Button signUp;
     private Button login;
+    private Button forgotPassword;
 
 
     @Override
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         signUp = findViewById(R.id.signUp);
         login = findViewById(R.id.login);
+        forgotPassword = findViewById(R.id.userForgotPassword);
         toolbar.setTitle(R.string.app_name);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -55,7 +59,19 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(MainActivity.this, "Registred successfully", Toast.LENGTH_LONG).show();
+                                    Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                Toast.makeText(MainActivity.this, "Registred successfully. Please check your email for verification!", Toast.LENGTH_LONG).show();
+                                                email.setText("");
+                                                password.setText("");
+                                            } else {
+                                                Toast.makeText(MainActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+
+                                        }
+                                    });
                                 } else {
                                     Toast.makeText(MainActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                                 }
@@ -67,7 +83,14 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class ));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ForgotPasswordActivity.class));
+
             }
         });
     }
