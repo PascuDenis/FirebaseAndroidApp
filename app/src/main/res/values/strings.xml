@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DB</string>
     <string name="email">Email</string>
-    <string name="password">password</string>
+    <string name="password">Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="log_out">Log Out</string>
@@ -9,4 +9,27 @@
     <string name="button">Button</string>
     <string name="send_me_password">Send me password</string>
     <string name="send_my_password" />
+    <string name="Username" />
+    <string name="update">Update</string>
+    <string name="username">Username</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="logo">Logo</string>
+    <string name="sign_in">Sign In</string>
+    <string name="log_in">Log In</string>
+    <string name="forgotten_password_click_here">Forgotten password? Click here!</string>
+    <string name="password_confirm">Password Confirm</string>
+    <string name="full_name">Full Name</string>
+    <string name="back">Back</string>
+    <string name="city">City</string>
+    <string name="country">Country</string>
+    <string name="oop">OOP</string>
+    <string name="design_patterns">Design Patterns</string>
+    <string name="data_strutures">Data Strutures</string>
+    <string name="databases">Databases</string>
+    <string name="alorithms">Alorithms</string>
+    <string name="education">Education</string>
+    <string name="user_profile_picture">User Profile Picture</string>
+    <string name="users">Users</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
 </resources>

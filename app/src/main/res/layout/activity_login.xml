@@ -1,52 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".LoginActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:fitsSystemWindows="true">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/loginToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:visibility="gone"
-            tools:ignore="MissingConstraints" />
-    </androidx.appcompat.widget.Toolbar>
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="212dp"
+        android:layout_height="155dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="35dp"
+        android:alpha="0"
+        android:background="@drawable/logo"
+        android:contentDescription="@string/logo"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/userEmailAddress"
-        android:layout_width="match_parent"
+        android:id="@+id/editTextUsername"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="250dp"
+        android:autofillHints=""
+        android:backgroundTint="#CCFCFCFC"
+        android:drawableStart="@drawable/userlogo"
+        android:drawablePadding="7dp"
+        android:drawableTint="#F5EFEF"
         android:ems="10"
-        android:hint="@string/email"
+        android:hint="Email:"
         android:inputType="textEmailAddress"
-        android:importantForAutofill="no" />
+        android:textColor="@android:color/white"
+        android:textColorHint="#CCFCFCFC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
 
     <EditText
-        android:id="@+id/userPassword"
-        android:layout_width="match_parent"
+        android:id="@+id/editTextPassword"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_marginBottom="250dp"
+        android:autofillHints=""
+        android:backgroundTint="#CCFCFCFC"
+        android:drawableStart="@drawable/userpassword"
+        android:drawablePadding="5dp"
+        android:drawableTint="#FDFCFC"
         android:ems="10"
-        android:hint="@string/password"
+        android:hint="Password:"
         android:inputType="textPassword"
-        android:importantForAutofill="no" />
+        android:textColor="@android:color/white"
+        android:textColorHint="#CCFCFCFC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/userLogin"
-        android:layout_width="match_parent"
+        android:id="@+id/buttonLogIn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login" />
+        android:layout_marginTop="35dp"
+        android:alpha=".75"
+        android:background="@drawable/signin_button_background"
+        android:text="@string/log_in"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
+    <Button
+        android:id="@+id/buttonSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:alpha=".75"
+        android:background="@drawable/signup_button_background"
+        android:text="@string/sign_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonLogIn" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/buttonForgottPassword"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="698dp"
+        android:layout_marginBottom="20dp"
+        android:alpha=".5"
+        android:backgroundTint="#00FFFFFF"
+        android:hint="@string/forgotten_password_click_here"
+        android:textColor="#FAF9F9"
+        android:textColorHint="@color/common_google_signin_btn_text_dark_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="181dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="182dp"
+        android:layout_marginBottom="50dp"
+        android:background="#00F00B0B"
+        app:layout_constraintBottom_toTopOf="@+id/editTextUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo"
+        app:layout_constraintVertical_bias="0.44" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

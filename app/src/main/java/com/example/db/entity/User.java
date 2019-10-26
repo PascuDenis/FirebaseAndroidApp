@@ -1,28 +1,74 @@
 package com.example.db.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class User {
-    public static final String TABLE_NAME = "user";
-
-    public static final String COLUMN_USERNAME = "username";
-    public static final String COLUMN_PASSWORD = "passeword";
-
+    private String id;
+    private String email;
     private String username;
     private String password;
-
-    public static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "("
-                    + COLUMN_USERNAME + " TEXT PRIMARY KEY,"
-                    + COLUMN_USERNAME + " TEXT,"
-                    + ")";
+    private String fullName;
+    private String education;
+    private String profilePictureUrl;
+    private String cityLocation;
+    private String countryLocation;
+    private Integer nrOfFollowers;
+    private Integer nrOfFollowing;
+    private List<User> followersList;
+    private List<Topic> topicsList;
 
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String id, String fullName, String username, String email) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+    }
+
+    public User(String id,
+                String fullName,
+                String username,
+                String email,
+                String cityLocation,
+                String countryLocation,
+                String education,
+                String profilePictureUrl,
+                Integer nrOfFollowers,
+                Integer nrOfFollowing,
+                List<User> followersList,
+                List<Topic> topicsList) {
+        this.id = id;
+        this.email = email;
         this.username = username;
         this.password = password;
+        this.fullName = fullName;
+        this.education = education;
+        this.profilePictureUrl = profilePictureUrl;
+        this.cityLocation = cityLocation;
+        this.countryLocation = countryLocation;
+        this.nrOfFollowers = nrOfFollowers;
+        this.nrOfFollowing = nrOfFollowing;
+        this.followersList = followersList;
+        this.topicsList = topicsList;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -41,12 +87,98 @@ public class User {
         this.password = password;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public String getCityLocation() {
+        return cityLocation;
+    }
+
+    public void setCityLocation(String cityLocation) {
+        this.cityLocation = cityLocation;
+    }
+
+    public String getCountryLocation() {
+        return countryLocation;
+    }
+
+    public void setCountryLocation(String countryLocation) {
+        this.countryLocation = countryLocation;
+    }
+
+    public Integer getNrOfFollowers() {
+        return nrOfFollowers;
+    }
+
+    public void setNrOfFollowers(Integer nrOfFollowers) {
+        this.nrOfFollowers = nrOfFollowers;
+    }
+
+    public Integer getNrOfFollowing() {
+        return nrOfFollowing;
+    }
+
+    public void setNrOfFollowing(Integer nrOfFollowing) {
+        this.nrOfFollowing = nrOfFollowing;
+    }
+
+    public List<User> getFollowersList() {
+        return followersList;
+    }
+
+    public void setFollowersList(List<User> followersList) {
+        this.followersList = followersList;
+    }
+
+    public List<Topic> getTopicsList() {
+        return topicsList;
+    }
+
+    public void setTopicsList(List<Topic> topicsList) {
+        this.topicsList = topicsList;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", profilePictureUrl='" + profilePictureUrl + '\'' +
+                ", cityLocation='" + cityLocation + '\'' +
+                ", countryLocation='" + countryLocation + '\'' +
+                ", nrOfFollowers=" + nrOfFollowers +
+                ", nrOfFollowing=" + nrOfFollowing +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(username, user.username);
+        return Objects.equals(id, user.id);
     }
 
     @Override
@@ -54,11 +186,4 @@ public class User {
         return Objects.hash(username);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }
