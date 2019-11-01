@@ -152,19 +152,19 @@ public class UpdateProfileFragment extends Fragment {
         String country = countryEditText.getText().toString();
         String education = educationEditText.getText().toString();
 
-        if (checkBoxAlgorithms.isSelected()) {
+        if (checkBoxAlgorithms.isChecked()) {
             topics.add(new Topic(TopicNames.ALGORITHMS, ExperianceLevel.valueOf(spinnerAlgorithms.getSelectedItem().toString())));
         }
-        if (checkBoxDatabases.isSelected()) {
+        if (checkBoxDatabases.isChecked()) {
             topics.add(new Topic(TopicNames.DATABASES, ExperianceLevel.valueOf(spinnerAlgorithms.getSelectedItem().toString())));
         }
-        if (checkBoxDataStructures.isSelected()) {
+        if (checkBoxDataStructures.isChecked()) {
             topics.add(new Topic(TopicNames.DATA_STRUCTURE, ExperianceLevel.valueOf(spinnerAlgorithms.getSelectedItem().toString())));
         }
-        if (checkBoxDesignPatterns.isSelected()) {
+        if (checkBoxDesignPatterns.isChecked()) {
             topics.add(new Topic(TopicNames.DESIGN_PATTERNS, ExperianceLevel.valueOf(spinnerAlgorithms.getSelectedItem().toString())));
         }
-        if (checkBoxOop.isSelected()) {
+        if (checkBoxOop.isChecked()) {
             topics.add(new Topic(TopicNames.OOP, ExperianceLevel.valueOf(spinnerAlgorithms.getSelectedItem().toString())));
         }
 

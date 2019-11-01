@@ -30,6 +30,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.db.entity.User;
+import com.example.db.repository.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,8 +40,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -56,25 +61,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileNavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+    private UserRepository repository;
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
     private CircleImageView imageViewUserProfilePicture;
     private NavigationView navigationView;
     private View headerView;
+    private TextView usernameTextView;
+    private TextView emailTextView;
     private final static int SELECT_PICTURE = 100;
 
     private Uri selectedImageUri;
@@ -92,6 +98,9 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_navigation);
+
+        repository = new UserRepository("users");
+
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
@@ -105,9 +114,17 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         navigationView.addHeaderView(headerView);
 
         imageViewUserProfilePicture = headerView.findViewById(R.id.user_profile_picture_imageButton);
+        usernameTextView = headerView.findViewById(R.id.user_username_textView);
+        emailTextView = headerView.findViewById(R.id.user_emailAddress_textView);
 
-        Uri imageUrl =  firebaseUser.getPhotoUrl();
+        getUsername();
+        emailTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        Uri imageUrl = firebaseUser.getPhotoUrl();
         System.out.println(imageUrl + "222222222222222222222222222");
+        if (imageUrl == null) {
+            getUserProfilePicture();
+        }
         Glide.with(getApplicationContext()).load(imageUrl).into(imageViewUserProfilePicture);
 
         imageViewUserProfilePicture.setClickable(true);
@@ -251,12 +268,27 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()){
+                                                if (task.isSuccessful()) {
                                                     Toast.makeText(ProfileNavigationActivity.this, "Profile picture updated!", Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         });
+                                FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            User object = snapshot.getValue(User.class);
+                                            if (object.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                                                repository.updateUserProfilePicture(new User(object.getId(), selectedImageUri.toString()));
+                                            }
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -388,7 +420,51 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         openImageChooser();
     }
 
-    private void logout(){
+    private void getUsername() {
+        FirebaseDatabase.getInstance().getReference().child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User object = snapshot.getValue(User.class);
+                            if (object.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                                usernameTextView.setText(object.getUsername());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void getUserProfilePicture() {
+        FirebaseDatabase.getInstance().getReference().child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User object = snapshot.getValue(User.class);
+                            if (object.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                                if (object.getProfilePictureUrl() == null || object.getProfilePictureUrl().equals("")) {
+                                    Glide.with(getApplicationContext()).load(object.getProfilePictureUrl()).into(imageViewUserProfilePicture);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Could not load profile picture!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void logout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(ProfileNavigationActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

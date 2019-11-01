@@ -21,6 +21,11 @@ public class User {
     public User() {
     }
 
+    public User(String id, String profilePictureUrl) {
+        this.id = id;
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
     public User(String id, String fullName, String username, String email) {
         this.id = id;
         this.fullName = fullName;

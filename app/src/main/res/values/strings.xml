@@ -58,5 +58,6 @@
     <string name="nrfollowers">nrfollowers</string>
     <string name="following">following</string>
     <string name="back">Back</string>
+    <string name="search_people">Search people</string>
 
 </resources>
