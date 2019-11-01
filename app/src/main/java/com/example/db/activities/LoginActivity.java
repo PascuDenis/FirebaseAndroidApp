@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonForgotPassword = findViewById(R.id.buttonForgottPassword);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        progressBar.setVisibility(View.INVISIBLE);
 
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
 //                                    if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
 //                                        if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
-                                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+//                                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, ProfileNavigationActivity.class));
 //                                    } else {
 //                                        Toast.makeText(LoginActivity.this, "Please verify your email address!", Toast.LENGTH_LONG).show();
 //                                    }

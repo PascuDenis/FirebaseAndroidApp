@@ -19,7 +19,6 @@
     <string name="forgotten_password_click_here">Forgotten password? Click here!</string>
     <string name="password_confirm">Password Confirm</string>
     <string name="full_name">Full Name</string>
-    <string name="back">Back</string>
     <string name="city">City</string>
     <string name="country">Country</string>
     <string name="oop">OOP</string>
@@ -30,6 +29,34 @@
     <string name="education">Education</string>
     <string name="user_profile_picture">User Profile Picture</string>
     <string name="users">Users</string>
-    <string name="username">Username</string>
-    <string name="email">Email</string>
+    <string name="logout">Logout</string>
+    <string name="title_activity_profile_navigation">ProfileNavigationActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
+    <string name="title_activity_profile_navigation_drawer">ProfileNavigationDrawerActivity</string>
+    <string name="menu_send">Send</string>
+    <string name="my_account">My account</string>
+    <string name="communicate">Communicate</string>
+    <string name="settings">Settings</string>
+    <string name="user_profle_picture">User profle picture</string>
+    <string name="navigation_bar_open">Open navigation bar</string>
+    <string name="navigation_bar_close">Close navigation bar</string>
+    <string name="followers">followers</string>
+    <string name="nrfollowing">nrfollowing</string>
+    <string name="nrfollowers">nrfollowers</string>
+    <string name="following">following</string>
+    <string name="back">Back</string>
+
 </resources>

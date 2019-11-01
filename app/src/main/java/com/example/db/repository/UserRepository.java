@@ -1,5 +1,7 @@
 package com.example.db.repository;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.example.db.entity.ExperianceLevel;
@@ -59,7 +61,7 @@ public class UserRepository implements ICRUDRepository<User, String> {
 
         User u;
         u = user;
-
+        DatabaseReference topicDatabaseReference = FirebaseDatabase.getInstance().getReference("users");
         System.out.println(user.getId() + "---------------------------!!!!!!!");
 
         userDatabaseReference.
@@ -73,58 +75,93 @@ public class UserRepository implements ICRUDRepository<User, String> {
                                     String cityLocation = (String) singleSnapShot.getValue();
                                     if (u.getCityLocation().equals("") || u.getCityLocation() == null)
                                         u.setCityLocation("");
-                                    if (cityLocation == null || cityLocation.equals("") || !cityLocation.equals(u.getCityLocation()))
-                                        u.setCityLocation((String) singleSnapShot.getValue());
+                                    else
+                                        u.setCityLocation(cityLocation);
+//                                    if (cityLocation == null || cityLocation.equals("") || !cityLocation.equals(u.getCityLocation()))
+//                                        u.setCityLocation((String) singleSnapShot.getValue());
                                     break;
                                 case "countryLocation":
                                     String countryLocation = (String) singleSnapShot.getValue();
                                     if (u.getCountryLocation().equals("") || u.getCountryLocation() == null)
                                         u.setCountryLocation("");
-                                    if (countryLocation == null || countryLocation.equals("") || !countryLocation.equals(u.getCountryLocation()) || !u.getCountryLocation().equals(""))
+                                    else
                                         u.setCountryLocation(countryLocation);
+//                                    if (countryLocation == null || countryLocation.equals("") || !countryLocation.equals(u.getCountryLocation()) || !u.getCountryLocation().equals(""))
+//                                        u.setCountryLocation(countryLocation);
                                     break;
                                 case "education":
                                     String education = (String) singleSnapShot.getValue();
                                     if (u.getEducation().equals("") || u.getEducation() == null)
                                         u.setEducation("");
-                                    if (education == null || education.equals("") || !education.equals(u.getEducation()) || !u.getEducation().equals(""))
+                                    else
                                         u.setEducation(education);
+//                                    if (education == null || education.equals("") || !education.equals(u.getEducation()) || !u.getEducation().equals(""))
+//                                        u.setEducation(education);
                                     break;
                                 case "fullName":
                                     String fullName = (String) singleSnapShot.getValue();
                                     if (u.getFullName().equals("") || u.getEducation() == null)
                                         u.setEducation("");
-                                    if (fullName == null || fullName.equals("") || !fullName.equals(u.getFullName()) || !u.getFullName().equals(""))
+                                    else
                                         u.setFullName(fullName);
+//                                    if (fullName == null || fullName.equals("") || !fullName.equals(u.getFullName()) || !u.getFullName().equals(""))
+//                                        u.setFullName(fullName);
                                     break;
                                 case "nrOfFollowers":
-                                    Integer nrOfFollowers = (Integer) singleSnapShot.getValue();
+                                    Integer nrOfFollowers =  Integer.parseInt(singleSnapShot.getValue().toString());
                                     if (u.getNrOfFollowers() == 0 || u.getNrOfFollowers() == null)
                                         u.setNrOfFollowers(0);
-                                    if (nrOfFollowers == null || nrOfFollowers == 0 || !nrOfFollowers.equals(u.getNrOfFollowers()) || u.getNrOfFollowers() != 0)
+                                    else
                                         u.setNrOfFollowers(nrOfFollowers);
+//                                    if (nrOfFollowers == null || nrOfFollowers == 0 || !nrOfFollowers.equals(u.getNrOfFollowers()) || u.getNrOfFollowers() != 0)
+//                                        u.setNrOfFollowers(nrOfFollowers);
                                     break;
                                 case "nrOfFollowing":
-                                    Integer nrOfFollowing = (Integer) singleSnapShot.getValue();
+                                    Integer nrOfFollowing = Integer.parseInt(singleSnapShot.getValue().toString());
                                     if (u.getNrOfFollowing() == 0 || u.getNrOfFollowing() == null)
                                         u.setNrOfFollowing(0);
-                                    if (nrOfFollowing == null || nrOfFollowing == 0 || !nrOfFollowing.equals(u.getNrOfFollowing()) || u.getNrOfFollowing() != 0)
+                                    else
                                         u.setNrOfFollowers(nrOfFollowing);
+
+//                                    if (nrOfFollowing == null || nrOfFollowing == 0 || !nrOfFollowing.equals(u.getNrOfFollowing()) || u.getNrOfFollowing() != 0)
+//                                        u.setNrOfFollowers(nrOfFollowing);
                                     break;
                                 case "profilePictureUrl":
-                                    String profilePictureUrl = (String) singleSnapShot.getValue();
+                                    String profilePictureUrl = singleSnapShot.getValue().toString();
                                     if (u.getProfilePictureUrl().equals("") || u.getProfilePictureUrl() == null)
                                         u.setProfilePictureUrl("");
-                                    if (profilePictureUrl == null || profilePictureUrl.equals("") || !profilePictureUrl.equals(u.getProfilePictureUrl()) || !u.getProfilePictureUrl().equals(""))
+                                    else
                                         u.setProfilePictureUrl(profilePictureUrl);
+//                                    if (profilePictureUrl == null || profilePictureUrl.equals("") || !profilePictureUrl.equals(u.getProfilePictureUrl()) || !u.getProfilePictureUrl().equals(""))
+//                                        u.setProfilePictureUrl(profilePictureUrl);
                                     break;
                                 case "username":
                                     String username = (String) singleSnapShot.getValue();
                                     if (u.getUsername().equals("") || u.getUsername() == null)
                                         u.setUsername("");
-                                    if (username == null || username.equals("") || !username.equals(u.getUsername()) || !u.getUsername().equals(""))
+                                    else
                                         u.setUsername(username);
+//                                    if (username == null || username.equals("") || !username.equals(u.getUsername()) || !u.getUsername().equals(""))
+//                                        u.setUsername(username);
                                     break;
+//                                case "topicsList":
+//                                    topicDatabaseReference.child(user.getId()).child("topicsList")
+//                                            .addValueEventListener(new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                            for (DataSnapshot topic : dataSnapshot.getChildren()){
+//
+//                                            }
+//                                            System.out.println(dataSnapshot);
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                        }
+//                                    });
+//                                    break;
+//                                    for (int i = 0; i<Integer.parseInt(singleSnapShot.getValue().toString().))
                             }
                         }
                     }

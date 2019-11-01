@@ -35,13 +35,18 @@ import com.example.db.entity.TopicNames;
 import com.example.db.entity.User;
 import com.example.db.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +59,6 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     List<TopicNames> topicNames = new ArrayList<>();
     List<String> experianceLevels;
     private UserRepository repository;
-    public static final int SELECT_PICTURE = 100;
 
     private TextView nameEditText;
     private EditText usernameEditText;
@@ -70,7 +74,15 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     private Spinner spinnerDataStructures;
     private Spinner spinnerDesignPatterns;
     private Spinner spinnerOop;
+
     private ImageView imageViewProfilePicture;
+    private final static int SELECT_PICTURE = 100;
+
+    private final static int imgWidth = 256;
+    private final static int imgHeight = 256;
+    private ArrayList<String> pathArray;
+    private int arrayPosition;
+    private StorageReference storageReference;
 
     private DatabaseReference databaseReferenceTopicNames;
     private DatabaseReference databaseReferenceExperianceLevels;
@@ -100,18 +112,25 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         imageViewProfilePicture.bringToFront();
         imageViewProfilePicture.setOnClickListener(this);
 
-        emailEditText.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-
         firebaseAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
         databaseReferenceTopicNames = FirebaseDatabase.getInstance().getReference("topicNames");
         databaseReferenceExperianceLevels = FirebaseDatabase.getInstance().getReference("experianceLevels");
 
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                updateUser();
+                updateUser();
             }
         });
+
+    }
+
+    private void getUserDetails(){
+        nameEditText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        emailEditText.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+//        nameEditText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+//        nameEditText.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
     }
 
@@ -137,6 +156,23 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+    }
+
+    private void addPathFiles() {
+        String path = System.getenv("EXTERNAL_STORAGE");
+        pathArray.add(path + "/Pictures/Portal/image1.jpg");
+        loadImageFromStorage();
+    }
+
+    private void loadImageFromStorage() {
+        try {
+            String path = pathArray.get(arrayPosition);
+            File f = new File(path, "");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            imageViewProfilePicture.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.getMessage();
+        }
     }
 
     private void handlePermission() {
