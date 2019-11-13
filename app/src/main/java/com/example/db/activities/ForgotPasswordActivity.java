@@ -34,7 +34,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
 
         toolbar = findViewById(R.id.forgotPasswordToolbar);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBarSignUp);
         userEmail = findViewById(R.id.userEmailEditText);
         userPassword = findViewById(R.id.forgotPasswordButton);
         toolbar.setTitle("Forgot Password");

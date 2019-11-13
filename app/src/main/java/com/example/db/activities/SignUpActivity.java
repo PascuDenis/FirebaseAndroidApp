@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -49,7 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         repository = new UserRepository("users");
 
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBarSignUp);
         userFullName = findViewById(R.id.editTextFullName);
         userEmailAddress = findViewById(R.id.editTextUserEmailAddress);
         userUsername = findViewById(R.id.editTextUsername);
@@ -71,7 +72,8 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    addUser();
+                                    FirebaseUser fUser = firebaseAuth.getCurrentUser();
+                                    addUser(fUser.getUid());
                                     Objects.requireNonNull(firebaseAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -106,7 +108,8 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void addUser() {
+    private void addUser(String authUserId) {
+        String userId = authUserId;
         String fullName = userFullName.getText().toString();
         String email = userEmailAddress.getText().toString();
         String username = userUsername.getText().toString();
@@ -115,8 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         if (!TextUtils.isEmpty(email) || (!TextUtils.isEmpty(username))) {
-            String id = userDatabase.push().getKey();
-            User user = new User(id, fullName, username, email, "", "", "", "", 0, 0, new ArrayList<User>(), new ArrayList<Topic>());
+            User user = new User(userId, fullName, username, email, "", "", "", "", 0, 0, new ArrayList<String >(), new ArrayList<Topic>());
 
             repository.create(user);
 //            userDatabase.child(id).setValue(user);

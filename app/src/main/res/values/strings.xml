@@ -59,5 +59,32 @@
     <string name="following">following</string>
     <string name="back">Back</string>
     <string name="search_people">Search people</string>
+    <string name="did_someone_forget_their_password">Did someone forget their password?</string>
+    <string name="that_s_okay_just_enter_the_email_address_you_ve_used_to_register_with_and_we_ll_send_you_a_reset_link">That\'s okay... Just enter the email address you\'ve used to register with and we\'ll send you a reset link!</string>
+    <string name="submit">Submit</string>
+    <string name="forgot_password_image">Forgot password image</string>
+    <string name="Reputation">Reputation</string>
+    <string name="reputation">reputation</string>
+    <string name="cluj_napoca">Cluj Napoca</string>
+    <string name="follow_me">Follow Me</string>
+    <string name="romania">Romania</string>
+    <string name="off">OFF</string>
+    <string name="on">ON</string>
+    <string name="dark_mode">Dark mode:</string>
+    <string name="search">Search</string>
+    <string name="send_message">Send message</string>
+    <string-array name="experiance_sort">
+        <item>None</item>
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+    <string-array name="topic_names">
+        <item>Algorithms</item>
+        <item>Databases</item>
+        <item>Data Structures</item>
+        <item>Design Patterns</item>
+        <item>Object-oriented programming</item>
+    </string-array>
+
 
 </resources>

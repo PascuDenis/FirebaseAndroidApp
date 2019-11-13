@@ -116,7 +116,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarSignUp"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

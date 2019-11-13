@@ -14,8 +14,8 @@ public class User {
     private String cityLocation;
     private String countryLocation;
     private Integer nrOfFollowers;
-    private Integer nrOfFollowing;
-    private List<User> followersList;
+    private Integer reputationNumber;
+    private List<String> followersList;
     private List<Topic> topicsList;
 
     public User() {
@@ -43,7 +43,7 @@ public class User {
                 String profilePictureUrl,
                 Integer nrOfFollowers,
                 Integer nrOfFollowing,
-                List<User> followersList,
+                List<String> followersList,
                 List<Topic> topicsList) {
         this.id = id;
         this.email = email;
@@ -55,7 +55,7 @@ public class User {
         this.cityLocation = cityLocation;
         this.countryLocation = countryLocation;
         this.nrOfFollowers = nrOfFollowers;
-        this.nrOfFollowing = nrOfFollowing;
+        this.reputationNumber = nrOfFollowing;
         this.followersList = followersList;
         this.topicsList = topicsList;
     }
@@ -140,19 +140,19 @@ public class User {
         this.nrOfFollowers = nrOfFollowers;
     }
 
-    public Integer getNrOfFollowing() {
-        return nrOfFollowing;
+    public Integer getReputationNumber() {
+        return reputationNumber;
     }
 
-    public void setNrOfFollowing(Integer nrOfFollowing) {
-        this.nrOfFollowing = nrOfFollowing;
+    public void setReputationNumber(Integer reputationNumber) {
+        this.reputationNumber = reputationNumber;
     }
 
-    public List<User> getFollowersList() {
+    public List<String> getFollowersList() {
         return followersList;
     }
 
-    public void setFollowersList(List<User> followersList) {
+    public void setFollowersList(List<String> followersList) {
         this.followersList = followersList;
     }
 
@@ -174,7 +174,7 @@ public class User {
                 ", cityLocation='" + cityLocation + '\'' +
                 ", countryLocation='" + countryLocation + '\'' +
                 ", nrOfFollowers=" + nrOfFollowers +
-                ", nrOfFollowing=" + nrOfFollowing +
+                ", reputationNumber=" + reputationNumber +
                 '}';
     }
 

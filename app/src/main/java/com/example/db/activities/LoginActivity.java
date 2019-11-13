@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBarSignUp);
         imageViewLogo = findViewById(R.id.imageViewLogo);
         editTextEmail = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 //                                    if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
 //                                        if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
 //                                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
-                                    startActivity(new Intent(LoginActivity.this, ProfileNavigationActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
 //                                    } else {
 //                                        Toast.makeText(LoginActivity.this, "Please verify your email address!", Toast.LENGTH_LONG).show();
 //                                    }

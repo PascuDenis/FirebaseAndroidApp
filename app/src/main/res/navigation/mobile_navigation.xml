@@ -23,4 +23,12 @@
         android:name="com.example.db.activities.fragments.LogOutFragment"
         android:label="@string/log_out"
         tools:layout="@layout/fragment_logout" />
+
+
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.db.activities.fragments.SettingsFragment"
+        android:label="@string/log_out"
+        tools:layout="@layout/fragment_logout" />
 </navigation>

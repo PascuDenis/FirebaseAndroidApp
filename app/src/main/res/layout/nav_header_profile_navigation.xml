@@ -78,7 +78,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/number_profile_shape"
-            android:gravity="center" />
+            android:gravity="center"
+            android:hint="0"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/user_followers_textView"
@@ -104,11 +106,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/user_number_if_following_textView"
+            android:id="@+id/user_reputation_number_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/number_profile_shape" />
+            android:background="@drawable/number_profile_shape"
+            android:gravity="center"
+            android:hint="0"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/user_following_textView"
@@ -116,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="@string/following"
+            android:text="@string/reputation"
             android:textColor="#F3EEEE"
             android:textSize="12sp"
             android:textStyle="bold" />

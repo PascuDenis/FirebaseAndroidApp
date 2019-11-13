@@ -1,41 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.appbar.CollapsingToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appbar_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.ProfileNavigationActivity">
+    android:layout_height="wrap_content"
+    android:background="#801A2324"
+    android:minHeight="50dp"
+    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+    app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+    app:layout_scrollFlags="scroll|enterAlways|snap"
+    app:contentScrim="?attr/colorPrimary"
+    app:expandedTitleMarginStart="48dp"
+    app:expandedTitleMarginEnd="64dp">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <EditText
+            android:id="@+id/search_people_textview"
+            style="@style/ThemeOverlay.AppCompat.Dark"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#978C71"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_gravity="center"
+            android:alpha=".60"
+            android:backgroundTint="@android:color/white"
+            android:drawableStart="@drawable/ic_search_black_24dp"
+            android:drawableTint="@android:color/white"
+            android:hint="@string/search_people"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:minWidth="3dp"
+            android:minHeight="40dp"
+            android:textColorHint="#030303" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/buttonBack"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+        <Spinner
+            android:id="@+id/spinnerSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_gravity="center|fill_horizontal"
+            android:entries="@array/experiance_sort"
+            android:gravity="center|fill"
+            android:minWidth="20dp"
+            android:minHeight="40dp" />
 
-                android:background="@drawable/button_back"
-                android:contentDescription="@string/back" />
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+    </GridLayout>
 
-    <include layout="@layout/content_profile_navigation" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</com.google.android.material.appbar.CollapsingToolbarLayout>

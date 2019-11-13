@@ -14,14 +14,19 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
-import com.example.db.UploadImage;
+import com.example.db.config.Config;
+import com.example.db.config.GlideApp;
+import com.example.db.config.UploadImage;
 import com.example.db.activities.fragments.ProfileFragment;
+import com.example.db.activities.fragments.SettingsFragment;
 import com.example.db.activities.fragments.UpdateProfileFragment;
 import com.example.db.activities.fragments.HomeFragment;
 
 import com.example.db.R;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -36,6 +41,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -74,16 +80,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileNavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private UserRepository repository;
 
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle toggle;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
-    private CircleImageView imageViewUserProfilePicture;
     private NavigationView navigationView;
+    private CircleImageView imageViewUserProfilePicture;
     private View headerView;
     private TextView usernameTextView;
     private TextView emailTextView;
+    private TextView reputationTextView;
+    private TextView followersTextView;
     private final static int SELECT_PICTURE = 100;
 
     private Uri selectedImageUri;
+    private boolean isDark;
 
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
@@ -98,6 +109,15 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_navigation);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         repository = new UserRepository("users");
 
@@ -116,16 +136,28 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         imageViewUserProfilePicture = headerView.findViewById(R.id.user_profile_picture_imageButton);
         usernameTextView = headerView.findViewById(R.id.user_username_textView);
         emailTextView = headerView.findViewById(R.id.user_emailAddress_textView);
+        reputationTextView = headerView.findViewById(R.id.user_reputation_number_textView);
+        followersTextView = headerView.findViewById(R.id.user_number_of_followers_textView);
 
-        getUsername();
+        getUserDetails();
         emailTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        isDark = Config.getThemeStatePref(getApplicationContext());
+
+        if (isDark){
+            navigationView.setBackgroundColor(getResources().getColor(R.color.ascend));
+        } else {
+            navigationView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }
+
 
         Uri imageUrl = firebaseUser.getPhotoUrl();
         System.out.println(imageUrl + "222222222222222222222222222");
         if (imageUrl == null) {
             getUserProfilePicture();
         }
-        Glide.with(getApplicationContext()).load(imageUrl).into(imageViewUserProfilePicture);
+
+        GlideApp.with(getApplicationContext()).load(imageUrl).into(imageViewUserProfilePicture);
 
         imageViewUserProfilePicture.setClickable(true);
         imageViewUserProfilePicture.bringToFront();
@@ -145,6 +177,7 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -161,11 +194,7 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+       closeApp("Are you sure you want to log out?");
     }
 
 
@@ -182,7 +211,7 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
                 break;
             case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                 break;
             case R.id.nav_logout:
                 logout();
@@ -233,6 +262,7 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
@@ -253,13 +283,22 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 Toast.makeText(ProfileNavigationActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                                 String imageName = System.currentTimeMillis() + "." + getFileExtension(selectedImageUri);
-                                UploadImage uploadImage = new UploadImage(
-                                        imageName,
-                                        taskSnapshot.getUploadSessionUri().toString()
-                                );
 
-                                String uploadId = databaseReference.push().getKey();
-                                databaseReference.child(uploadId).setValue(uploadImage);
+                                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        UploadImage uploadImage = new UploadImage(
+                                                imageName,
+                                                taskSnapshot.getUploadSessionUri().toString(),
+                                                uri.toString()
+                                        );
+                                        String uploadId = databaseReference.push().getKey();
+//                                        databaseReference.child(userImageId).setValue(uploadImage);
+                                    }
+                                });
+
+
+//                                databaseReference.child(uploadId).setValue(uploadImage);
                                 UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                                         .setPhotoUri(selectedImageUri)
                                         .build();
@@ -420,7 +459,7 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         openImageChooser();
     }
 
-    private void getUsername() {
+    private void getUserDetails() {
         FirebaseDatabase.getInstance().getReference().child("users")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -429,6 +468,8 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
                             User object = snapshot.getValue(User.class);
                             if (object.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                                 usernameTextView.setText(object.getUsername());
+                                reputationTextView.setText(String.valueOf(object.getReputationNumber()));
+                                followersTextView.setText(String.valueOf(object.getNrOfFollowers()));
                             }
                         }
                     }
@@ -471,4 +512,28 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
+    private void closeApp(String message){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        logout();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message)
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+
 }

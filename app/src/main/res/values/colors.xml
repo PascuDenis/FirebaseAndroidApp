@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#7DD547</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#2F333F</color>
     <color name="colorAccent">#A02653</color>
+    <color name="bluedark">#2F333F</color>
+    <color name="bluelight">#49ACD5</color>
+    <color name="green">#45BC63</color>
+    <color name="orange">#EAAD43</color>
+
+    <color name="ascend">#94785D</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="card_bg_color">#F6F6F6</color>
+    <color name="card_bg_dark_color">#0E0E0E</color>
+
+    <color name="hf_root_dark_mode">#3C404E</color>
+    <color name="hf_root_light_mode">#94785D</color>
+
+    <color name="hf_cart_dark_mode">#221F2C</color>
+    <color name="hf_cart_light_mode">#CABE81</color>
+
+    <color name="toolbar_dark_mode">#80161616</color>
+    <color name="toolbar_light_mode">#BF172B3A</color>
+
+    <color name="navigation_dark_mode">#205158</color>
+    <color name="navigation_light_mode">#916A44</color>
+
 </resources>
