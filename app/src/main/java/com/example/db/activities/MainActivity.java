@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.db.R;
 import com.example.db.activities.fragments.HomeFragment;
+import com.example.db.activities.fragments.MessagingFragment;
 import com.example.db.activities.fragments.ProfileFragment;
 import com.example.db.activities.fragments.SettingsFragment;
 import com.example.db.activities.fragments.UpdateProfileFragment;
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (imageUrl == null) {
             getUserProfilePicture();
         }
-        Picasso.with(getApplicationContext()).load(imageUrl).into(imageViewUserProfilePicture);
+        Picasso.get().load(imageUrl).into(imageViewUserProfilePicture);
 
         imageViewUserProfilePicture.setClickable(true);
         imageViewUserProfilePicture.bringToFront();
@@ -198,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_myprofile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new ProfileFragment()).commit();
+                break;
+            case R.id.nav_messaing:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new MessagingFragment()).commit();
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new SettingsFragment()).commit();
@@ -329,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE && data != null && data.getData() != null) {
             // Get the url from data
             selectedImageUri = data.getData();
-            Picasso.with(this).load(selectedImageUri).into(imageViewUserProfilePicture);
+            Picasso.get().load(selectedImageUri).into(imageViewUserProfilePicture);
             String userImageId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             //Uploading a image to firebase server
             if (selectedImageUri != null) {

@@ -19,11 +19,26 @@
 
 
     <fragment
+        android:id="@+id/nav_messaing"
+        android:name="com.example.db.activities.fragments.MessagingFragment"
+        android:label="@string/log_out"
+        tools:layout="@layout/fragment_messaging" >
+        <action
+            android:id="@+id/action_nav_messaing_to_nav_chat"
+            app:destination="@id/nav_chat" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_chat"
+        android:name="com.example.db.activities.fragments.ChatFragment"
+        android:label="@string/log_out"
+        tools:layout="@layout/fragment_chat" />
+
+    <fragment
         android:id="@+id/nav_logout"
         android:name="com.example.db.activities.fragments.LogOutFragment"
         android:label="@string/log_out"
         tools:layout="@layout/fragment_logout" />
-
 
 
     <fragment

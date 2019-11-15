@@ -271,7 +271,7 @@ public class ProfileNavigationActivity extends AppCompatActivity implements Navi
         if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE && data != null && data.getData() != null) {
             // Get the url from data
             selectedImageUri = data.getData();
-            Picasso.with(this).load(selectedImageUri).into(imageViewUserProfilePicture);
+            Picasso.get().load(selectedImageUri).into(imageViewUserProfilePicture);
 
             //Uploading a image to firebase server
             if (selectedImageUri != null) {

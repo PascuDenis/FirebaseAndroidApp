@@ -1,11 +1,13 @@
 package com.example.db.recyclerview;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.db.R;
+import com.example.db.activities.MainActivity;
+import com.example.db.activities.fragments.ChatFragment;
+import com.example.db.activities.fragments.MessagingFragment;
+import com.example.db.activities.fragments.UpdateProfileFragment;
 import com.example.db.config.GlideApp;
 import com.example.db.config.UploadImage;
 import com.example.db.entity.User;
@@ -84,7 +93,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
                         if (dataSnapshot.getValue() != null) {
                             UploadImage object = dataSnapshot.getValue(UploadImage.class);
                             if (object.getDownloadUrl() != null) {
-                                Picasso.with(context).load(object.getDownloadUrl()).into(holder.circleImageViewUserProfilePicture);
+                                Picasso.get().load(object.getDownloadUrl()).into(holder.circleImageViewUserProfilePicture);
                             }
                         }
                     }
@@ -159,7 +168,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
 
             TextView txtclose;
             Button btnFollow;
-            Button btnsendmessage;
+            Button btnSendMessage;
             dialog.setContentView(R.layout.pop_up_user_profile);
 
 
@@ -174,7 +183,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
 
             txtclose = dialog.findViewById(R.id.textviewclose);
             btnFollow = dialog.findViewById(R.id.btnfollow);
-            btnsendmessage = dialog.findViewById(R.id.btnsendmessage);
+            btnSendMessage = dialog.findViewById(R.id.btnsendmessage);
 
 
             popupProfileImage.setImageDrawable(circleImageViewUserProfilePicture.getDrawable());
@@ -213,9 +222,22 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
                 }
             });
 
-            btnsendmessage.setOnClickListener(new View.OnClickListener() {
+            btnSendMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("CurrentUserId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    bundle.putString("GuestUserId", userId);
+                    ChatFragment fragment = new ChatFragment();
+                    fragment.setArguments(bundle);
+
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.flContent, fragment)
+                            .commit();
+                    dialog.dismiss();
 
                 }
             });
