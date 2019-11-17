@@ -53,7 +53,8 @@
     <string name="user_profle_picture">User profle picture</string>
     <string name="navigation_bar_open">Open navigation bar</string>
     <string name="navigation_bar_close">Close navigation bar</string>
-    <string name="followers">followers</string>
+    <string name="followers">Followers</string>
+    <string name="chats">Chats</string>
     <string name="nrfollowing">nrfollowing</string>
     <string name="nrfollowers">nrfollowers</string>
     <string name="following">following</string>
@@ -89,6 +90,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="messages">Messages</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="search2">Search ...</string>
+    <string name="seen">seen</string>
 
 
 </resources>

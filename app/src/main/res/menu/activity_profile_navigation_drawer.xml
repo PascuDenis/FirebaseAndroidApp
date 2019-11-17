@@ -17,12 +17,13 @@
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/my_account" />
         <item
-            android:id="@+id/nav_messaing"
+            android:id="@+id/nav_chats"
             android:icon="@drawable/ic_message_black_24dp"
-            android:title="@string/messages" />
+            android:title="@string/chats" />
         <item
-            android:id="@+id/nav_tools"
-            android:title="@string/menu_tools" />
+            android:id="@+id/nav_followers"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/followers" />
     </group>
 
     <item android:title="@string/communicate">

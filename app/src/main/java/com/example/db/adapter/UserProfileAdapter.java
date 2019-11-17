@@ -1,13 +1,10 @@
-package com.example.db.recyclerview;
+package com.example.db.adapter;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +12,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.db.R;
-import com.example.db.activities.MainActivity;
-import com.example.db.activities.fragments.ChatFragment;
-import com.example.db.activities.fragments.MessagingFragment;
-import com.example.db.activities.fragments.UpdateProfileFragment;
-import com.example.db.config.GlideApp;
+import com.example.db.activities.MessageActivity;
 import com.example.db.config.UploadImage;
 import com.example.db.entity.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.db.recyclerview.UserProfileListItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,12 +30,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -72,7 +58,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_recycler_view, parent, false);
+                .inflate(R.layout.list_user_recycler_view, parent, false);
         return new ViewHolder(v);
     }
 
@@ -225,18 +211,11 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
             btnSendMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bundle bundle = new Bundle();
+                    Intent intent = new Intent(context, MessageActivity.class);
+                    intent.putExtra("CurrentUserId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    intent.putExtra("GuestUserId", userId);
+                    context.startActivity(intent);
 
-                    bundle.putString("CurrentUserId", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    bundle.putString("GuestUserId", userId);
-                    ChatFragment fragment = new ChatFragment();
-                    fragment.setArguments(bundle);
-
-                    AppCompatActivity activity = (AppCompatActivity) context;
-                    activity.getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.flContent, fragment)
-                            .commit();
                     dialog.dismiss();
 
                 }

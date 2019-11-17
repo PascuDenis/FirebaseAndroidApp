@@ -16,7 +16,7 @@
             layout="@layout/app_bar_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <!-- The main content view where fragments are loaded -->
+        <!-- The main message view where fragments are loaded -->
         <FrameLayout
             android:id="@+id/flContent"
             android:layout_width="match_parent"

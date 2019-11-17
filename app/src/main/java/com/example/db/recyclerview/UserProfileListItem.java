@@ -9,17 +9,28 @@ public class UserProfileListItem {
     private String displayedUsername;
     private String displayedTopicName;
     private String displayedExperianceLevel;
+    private String status;
 
     public UserProfileListItem() {
     }
 
-    public UserProfileListItem(String currentUserId, String displayedUserId, String displayedProfilePicture, String displayedUsername, String displayedTopicName, String displayedExperianceLevel) {
+    public UserProfileListItem(String currentUserId, String displayedUserId, String displayedProfilePicture, String displayedUsername, String status) {
+        this.currentUserId = currentUserId;
+        this.displayedUserId = displayedUserId;
+        this.displayedProfilePicture = displayedProfilePicture;
+        this.displayedUsername = displayedUsername;
+        this.status = status;
+    }
+
+    public UserProfileListItem(String currentUserId, String displayedUserId, String displayedProfilePicture, String displayedUsername, String displayedTopicName, String displayedExperianceLevel, String status) {
         this.currentUserId = currentUserId;
         this.displayedUserId = displayedUserId;
         this.displayedProfilePicture = displayedProfilePicture;
         this.displayedUsername = displayedUsername;
         this.displayedTopicName = displayedTopicName;
         this.displayedExperianceLevel = displayedExperianceLevel;
+        this.status = status;
+
     }
 
     public String getCurrentUserId() {
@@ -68,5 +79,13 @@ public class UserProfileListItem {
 
     public void setDisplayedExperianceLevel(String displayedExperianceLevel) {
         this.displayedExperianceLevel = displayedExperianceLevel;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

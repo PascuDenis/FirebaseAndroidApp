@@ -229,7 +229,7 @@ public class UpdateProfileFragment extends Fragment {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             User object = snapshot.getValue(User.class);
                             if (object.getEmail().equals(email)) {
-                                repository.update(new User(object.getId(), name, username, email, city, country, education, "", 0, 0, new ArrayList<>(), topics));
+                                repository.update(new User(object.getId(), name, username, email, city, country, education, "", 0, 0, new ArrayList<>(), topics, "offline"));
                                 System.out.println(object.getId() + "----------------------------");
                             }
                         }

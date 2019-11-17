@@ -3,47 +3,78 @@ package com.example.db.entity;
 import java.util.Date;
 
 public class Message {
-    private String id;
-    private String conversationId;
-    private String content;
-    private Date timeCeated;
+    private String sender;
+    private String receiver;
+    private String message;
+    private Date timeCreated;
+    boolean isSeen;
 
-    public Message(String id, String conversationId, String content, Date timeCeated) {
-        this.id = id;
-        this.conversationId = conversationId;
-        this.content = content;
-        this.timeCeated = timeCeated;
+    public Message(String senderId, String conversationId, String content, Date timeCeated, boolean idSeen) {
+        this.sender = senderId;
+        this.receiver = conversationId;
+        this.message = content;
+        this.timeCreated = timeCeated;
+        this.isSeen = idSeen;
     }
 
-    public String getId() {
-        return id;
+    public Message(String senderId, String conversationId, String content, boolean isSeen) {
+        this.sender = senderId;
+        this.receiver = conversationId;
+        this.message = content;
+        this.isSeen = isSeen;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Message() {
     }
 
-    public String getConversationId() {
-        return conversationId;
+    public String getSender() {
+        return sender;
     }
 
-    public void setConversationId(String conversationId) {
-        this.conversationId = conversationId;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public String getContent() {
-        return content;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public Date getTimeCeated() {
-        return timeCeated;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTimeCeated(Date timeCeated) {
-        this.timeCeated = timeCeated;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Date getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(Date timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+
+    public boolean isIsSeen() {
+        return isSeen;
+    }
+
+    public void setIsSeen(boolean idSeen) {
+        this.isSeen = idSeen;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", message='" + message + '\'' +
+                ", timeCreated=" + timeCreated +
+                ", isSeen=" + isSeen +
+                '}';
     }
 }

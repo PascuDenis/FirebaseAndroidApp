@@ -8,12 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,26 +21,23 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.db.R;
+import com.example.db.activities.fragments.ChatsFragment;
+import com.example.db.activities.fragments.FollowersFragment;
 import com.example.db.activities.fragments.HomeFragment;
-import com.example.db.activities.fragments.MessagingFragment;
 import com.example.db.activities.fragments.ProfileFragment;
 import com.example.db.activities.fragments.SettingsFragment;
 import com.example.db.activities.fragments.UpdateProfileFragment;
 import com.example.db.config.Config;
-import com.example.db.config.GlideApp;
 import com.example.db.config.UploadImage;
 import com.example.db.entity.User;
 import com.example.db.repository.UserRepository;
@@ -68,11 +60,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.Objects;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private DrawerLayout mDrawer;
@@ -200,8 +190,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_myprofile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new ProfileFragment()).commit();
                 break;
-            case R.id.nav_messaing:
-                getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new MessagingFragment()).commit();
+            case R.id.nav_chats:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new ChatsFragment()).commit();
+                break;
+            case R.id.nav_followers:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new FollowersFragment()).commit();
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flContent, new SettingsFragment()).commit();
@@ -495,5 +488,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setMessage(message)
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
+    }
+
+
+    private void status(String status){
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid()).updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 }

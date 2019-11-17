@@ -3,17 +3,14 @@ package com.example.db.activities.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,7 +26,7 @@ import com.example.db.R;
 import com.example.db.config.Config;
 import com.example.db.entity.Topic;
 import com.example.db.entity.User;
-import com.example.db.recyclerview.UserProfileAdapter;
+import com.example.db.adapter.UserProfileAdapter;
 import com.example.db.recyclerview.UserProfileListItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -125,7 +122,8 @@ public class HomeFragment extends Fragment {
                                                     object.getProfilePictureUrl(),
                                                     object.getId(),
                                                     String.valueOf(topic.getTopicNames()),
-                                                    String.valueOf(topic.getExperianceLevel())
+                                                    String.valueOf(topic.getExperianceLevel()),
+                                                    "offline"
                                             );
                                             listItemList.add(displayedUser);
                                             break;
@@ -196,8 +194,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
-
     }
 
 
@@ -243,35 +239,35 @@ public class HomeFragment extends Fragment {
 
 
     private void populateList() {
-        this.listItemList.add(new UserProfileListItem("","Some ID 1", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 2", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 3", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 4", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 5", "content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 6", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 7", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 8", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 9", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 10", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 11", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("", "","content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 13", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 14", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 15", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 16", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 17", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 18", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 19", "content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 20", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 21", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 22", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 23", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 24", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 25", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 26", "content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 27", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 28", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
-        this.listItemList.add(new UserProfileListItem("","Some ID 29", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 1", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 2", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 3", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 4", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 5", "content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 6", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 7", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 8", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 9", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 10", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 11", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("", "","content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 13", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 14", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 15", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 16", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 17", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 18", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 19", "content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 20", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 21", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 22", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 23", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 24", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 25", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 26", "content://com.android.providers.media.documents/document/image%3A16339", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 27", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 28", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
+        this.listItemList.add(new UserProfileListItem("","Some ID 29", "content://media/external/images/media/15292", "USERNAME1", "OOP", "BEGINNER", "offline"));
     }
 
 }

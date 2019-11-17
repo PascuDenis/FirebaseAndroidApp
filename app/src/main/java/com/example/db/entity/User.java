@@ -17,6 +17,7 @@ public class User {
     private Integer reputationNumber;
     private List<String> followersList;
     private List<Topic> topicsList;
+    private String status;
 
     public User() {
     }
@@ -44,7 +45,8 @@ public class User {
                 Integer nrOfFollowers,
                 Integer nrOfFollowing,
                 List<String> followersList,
-                List<Topic> topicsList) {
+                List<Topic> topicsList,
+                String status) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -58,6 +60,7 @@ public class User {
         this.reputationNumber = nrOfFollowing;
         this.followersList = followersList;
         this.topicsList = topicsList;
+        this.status = status;
     }
 
     public String getId() {
@@ -164,17 +167,31 @@ public class User {
         this.topicsList = topicsList;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", education='" + education + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +
                 ", cityLocation='" + cityLocation + '\'' +
                 ", countryLocation='" + countryLocation + '\'' +
                 ", nrOfFollowers=" + nrOfFollowers +
                 ", reputationNumber=" + reputationNumber +
+                ", followersList=" + followersList +
+                ", topicsList=" + topicsList +
+                ", status='" + status + '\'' +
                 '}';
     }
 
