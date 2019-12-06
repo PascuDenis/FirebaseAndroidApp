@@ -3,12 +3,15 @@ package com.example.db.adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -18,19 +21,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.db.R;
 import com.example.db.activities.MessageActivity;
 import com.example.db.config.UploadImage;
-import com.example.db.entity.Message;
 import com.example.db.entity.User;
 import com.example.db.recyclerview.UserProfileListItem;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,10 +39,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapter.ViewHolder> {
     private List<UserProfileListItem> followerProfileListItems;
     private Context context;
-    private FirebaseStorage storageReference;
-    private boolean isDark = false;
+    private boolean isDark;
     private boolean isChat;
-    private String theLastMessage;
 
     public UserFollowerAdapter(Context context, List<UserProfileListItem> userProfileListItems, boolean isDark, boolean isChat) {
         this.context = context;
@@ -55,13 +54,12 @@ public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_follower_recycler_view, parent, false);
-        return new UserFollowerAdapter.ViewHolder(v);
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserProfileListItem listItem = followerProfileListItems.get(position);
-        storageReference = FirebaseStorage.getInstance();
 
         FirebaseDatabase.getInstance().getReference().child("uploads").child(listItem.getDisplayedUserId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -73,6 +71,9 @@ public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapte
                             if (object.getDownloadUrl() != null) {
                                 Picasso.get().load(object.getDownloadUrl()).into(holder.circleImageViewUserProfilePicture);
                             }
+                            else {
+                                Picasso.get().load(R.drawable.user_standard_profile_picture).into(holder.circleImageViewUserProfilePicture);
+                            }
                         }
                     }
 
@@ -82,6 +83,17 @@ public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapte
                 });
 
         holder.textViewUserUsername.setText(listItem.getDisplayedUsername());
+
+        holder.cardView.setLongClickable(true);
+
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(context, "LONG CLICK", Toast.LENGTH_SHORT).show();
+                holder.showPopup(listItem.getDisplayedUserId());
+                return true;
+            }
+        });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,24 +105,6 @@ public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapte
             }
         });
 
-        if (isChat) {
-            lastMessage(listItem.getDisplayedUserId(), holder.last_msg);
-        } else {
-            holder.last_msg.setVisibility(View.GONE);
-        }
-
-        if (isChat) {
-            if (listItem.getStatus().equals("online")) {
-                holder.img_on.setVisibility(View.VISIBLE);
-                holder.img_off.setVisibility(View.GONE);
-            } else {
-                holder.img_on.setVisibility(View.GONE);
-                holder.img_off.setVisibility(View.VISIBLE);
-            }
-        } else {
-            holder.img_on.setVisibility(View.GONE);
-            holder.img_off.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -121,8 +115,8 @@ public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView circleImageViewUserProfilePicture;
         TextView textViewUserUsername;
-        ImageView img_on;
-        ImageView img_off;
+        CircleImageView img_on;
+        CircleImageView img_off;
         TextView last_msg;
         Dialog dialog;
         CardView cardView;
@@ -148,44 +142,149 @@ public class UserFollowerAdapter extends RecyclerView.Adapter<UserFollowerAdapte
                 textViewUserUsername.setTextColor(ContextCompat.getColor(context, R.color.black));
             }
         }
+
+        public void showPopup(String userId) {
+
+            CircleImageView popupProfileImage;
+            TextView popupFullName;
+            TextView popupEmail;
+            TextView popupEducation;
+            TextView popupNrFolowers;
+            TextView popupCountry;
+            TextView popupCity;
+            TextView popupNrReputation;
+
+            TextView txtclose;
+            Button btnFollow;
+            Button btnSendMessage;
+            dialog.setContentView(R.layout.pop_up_user_follower);
+
+
+            popupProfileImage = dialog.findViewById(R.id.profile_popup_picture);
+            popupFullName = dialog.findViewById(R.id.profile_popup_fullname);
+            popupEmail = dialog.findViewById(R.id.profile_popup_email);
+            popupEducation = dialog.findViewById(R.id.profile_popup_education);
+            popupNrFolowers = dialog.findViewById(R.id.popup_nr_of_followers);
+            popupCountry = dialog.findViewById(R.id.pofile_popup_user_country);
+            popupCity = dialog.findViewById(R.id.profile_popup_user_city);
+            popupNrReputation = dialog.findViewById(R.id.popup_reputation_number);
+
+            txtclose = dialog.findViewById(R.id.textviewclose);
+            btnFollow = dialog.findViewById(R.id.btnLike);
+            btnSendMessage = dialog.findViewById(R.id.btnsendmessage);
+
+            popupProfileImage.setImageDrawable(circleImageViewUserProfilePicture.getDrawable());
+            FirebaseDatabase.getInstance().getReference().child("users")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                User object = snapshot.getValue(User.class);
+                                if (object.getId().equals(userId)) {
+                                    popupFullName.setText(object.getFullName());
+                                    popupEmail.setText(object.getEmail());
+                                    popupEducation.setText(object.getEducation());
+//                                    popupNrFolowers.setText(object.getNrOfFollowers());
+                                    popupCountry.setText(object.getCountryLocation());
+                                    popupCity.setText(object.getCityLocation());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+            hasReputation(FirebaseAuth.getInstance().getCurrentUser().getUid(), userId);
+
+            btnFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addReputation(FirebaseAuth.getInstance().getCurrentUser().getUid(), userId);
+                    btnFollow.setEnabled(false);
+                    btnFollow.setText("ALREADY LIKED");
+                }
+            });
+
+            btnSendMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, MessageActivity.class);
+                    intent.putExtra("CurrentUserId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    intent.putExtra("GuestUserId", userId);
+                    context.startActivity(intent);
+
+                    dialog.dismiss();
+
+                }
+            });
+
+            txtclose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        }
+
+        private void hasReputation(String currentUserId, String followerUserId) {
+            Button btnLike = dialog.findViewById(R.id.btnLike);
+            FirebaseDatabase.getInstance().getReference().child("users")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                User object = snapshot.getValue(User.class);
+                                if (object.getId().equals(currentUserId)) {
+                                    if (object.getReputationList() != null && object.getReputationList().contains(followerUserId)) {
+                                        btnLike.setEnabled(false);
+                                        btnLike.setText("ALREADY LIKED");
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+        }
+
     }
-
-    //check for last message
-    private void lastMessage(final String userid, final TextView last_msg) {
-        theLastMessage = "default";
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Message message = snapshot.getValue(Message.class);
-                    if (firebaseUser != null && message != null) {
-                        if (message.getReceiver().equals(firebaseUser.getUid()) && message.getSender().equals(userid) ||
-                                message.getReceiver().equals(userid) && message.getSender().equals(firebaseUser.getUid())) {
-                            theLastMessage = message.getMessage();
+    private void addReputation(String currentUserId, String follwerUserId) {
+        System.out.println(currentUserId + "    - - - - - - -  --  " + follwerUserId);
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users");
+        FirebaseDatabase.getInstance().getReference().child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<String> reputationList;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User object = snapshot.getValue(User.class);
+                            if (object.getId().equals(follwerUserId)) {
+                                Integer reputationNumber = Integer.parseInt(String.valueOf(object.getNrOfFollowers()));
+                                reputationNumber++;
+                                databaseRef.child(follwerUserId).child("reputationNumber").setValue(reputationNumber);
+                            }
+                            if (object.getId().equals(currentUserId)) {
+                                if (object.getReputationList() == null) {
+                                    reputationList = new ArrayList<>();
+                                } else {
+                                    reputationList = object.getReputationList();
+                                }
+                                reputationList.add(follwerUserId);
+                                databaseRef.child(currentUserId).child("reputationList").setValue(reputationList);
+                            }
                         }
                     }
 
-                }
-                switch (theLastMessage) {
-                    case "default":
-                        last_msg.setText("No Message");
-                        break;
-
-                    default:
-                        last_msg.setText(theLastMessage);
-                        break;
-                }
-
-                theLastMessage = "default";
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 }

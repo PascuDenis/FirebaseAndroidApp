@@ -88,4 +88,17 @@ public class UserProfileListItem {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "UserProfileListItem{" +
+                "currentUserId='" + currentUserId + '\'' +
+                ", displayedUserId='" + displayedUserId + '\'' +
+                ", displayedProfilePicture='" + displayedProfilePicture + '\'' +
+                ", displayedUsername='" + displayedUsername + '\'' +
+                ", displayedTopicName='" + displayedTopicName + '\'' +
+                ", displayedExperianceLevel='" + displayedExperianceLevel + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

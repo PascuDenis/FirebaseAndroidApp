@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:minHeight="250dp"
-        android:padding="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,6 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,17 +32,14 @@
                 android:id="@+id/search_followers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search2"/>
+                android:hint="@string/search2" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/followers_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
+                android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="2dp"
-                android:padding="5dp"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            </androidx.recyclerview.widget.RecyclerView>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"></androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.db.R;
-import com.example.db.adapter.UserFollowerAdapter;
+import com.example.db.adapter.UserMessagesAdapter;
 import com.example.db.entity.ConversationList;
 import com.example.db.entity.User;
 import com.example.db.entity.notification.Token;
-import com.example.db.recyclerview.UserProfileListItem;
+import com.example.db.recyclerview.UserMessageListItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,21 +33,24 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.db.config.Config.getThemeStatePref;
+
 public class ChatsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private Toolbar toolbar;
     private Spinner experianceSpinner;
-    private EditText searchPeopleEditText;
+    private TextView searchPeopleEditText;
     private GridLayout gridLayout;
 
-    private UserFollowerAdapter userAdapter;
-    private List<UserProfileListItem> mUsers;
+    private UserMessagesAdapter userMessagesAdapter;
+    private List<UserMessageListItem> mUsers;
+
+    private List<ConversationList> usersList;
+    boolean isDark;
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
-
-    private List<ConversationList> usersList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -75,6 +78,13 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
 
+        isDark = getThemeStatePref(getContext());
+        if (isDark) {
+            recyclerView.setBackgroundColor(getResources().getColor(R.color.hf_root_dark_mode));
+        } else {
+            recyclerView.setBackgroundColor(getResources().getColor(R.color.hf_root_light_mode));
+        }
+
         reference = FirebaseDatabase.getInstance().getReference("conversations").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -83,6 +93,40 @@ public class ChatsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ConversationList conversationList = snapshot.getValue(ConversationList.class);
                     usersList.add(conversationList);
+                }
+                System.out.println(usersList.size());
+                if (usersList.size() == 0) {
+                    FirebaseDatabase.getInstance().getReference("conversations").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String conversationId = snapshot.getKey();
+                                System.out.println(snapshot + "memememememememe");
+                                FirebaseDatabase.getInstance().getReference("conversations").child(conversationId).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                            ConversationList conversationList = snapshot1.getValue(ConversationList.class);
+                                            if (conversationList.getId().equals(firebaseUser.getUid())) {
+                                                ConversationList object = new ConversationList(conversationId);
+                                                usersList.add(object);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 conversationList();
             }
@@ -93,36 +137,14 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-//        reference = FirebaseDatabase.getInstance().getReference("messages");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                usersList.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Message message = snapshot.getValue(Message.class);
-//
-//                    if (message.getSented().equals(firebaseUser.getUid())) {
-//                        usersList.add(message.getReceiver());
-//                    }
-//                    if (message.getReceiver().equals(firebaseUser.getUid())) {
-//                        usersList.add(message.getSented());
-//                    }
-//                }
-//                readChats();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        updateToken(FirebaseInstanceId.getInstance().
 
-        updateToken(FirebaseInstanceId.getInstance().getToken());
+                getToken());
 
         return root;
     }
 
-    private void updateToken(String token){
+    private void updateToken(String token) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("tokens");
         Token token1 = new Token(token);
         reference.child(firebaseUser.getUid()).setValue(token1);
@@ -134,29 +156,29 @@ public class ChatsFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                System.out.println("lallalaalal");
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    System.out.println("ooooooooo");
                     for (ConversationList conversationList : usersList) {
                         if (user.getId().equals(conversationList.getId())) {
-                            UserProfileListItem userProfileListItem = new UserProfileListItem();
-                            userProfileListItem.setCurrentUserId(firebaseUser.getUid());
-                            userProfileListItem.setDisplayedUserId(user.getId());
-                            userProfileListItem.setDisplayedProfilePicture(user.getProfilePictureUrl());
-                            userProfileListItem.setDisplayedUsername(user.getUsername());
-                            userProfileListItem.setDisplayedTopicName("");
-                            userProfileListItem.setDisplayedExperianceLevel("");
-                            userProfileListItem.setStatus(user.getStatus());
-                            mUsers.add(userProfileListItem);
+                            UserMessageListItem userMessageListItem = new UserMessageListItem(
+                                    firebaseUser.getUid(),
+                                    user.getId(),
+                                    user.getProfilePictureUrl(),
+                                    user.getUsername(),
+                                    user.getStatus()
+                            );
+
+                            mUsers.add(userMessageListItem);
                         }
-                        mUsers.forEach(x-> System.out.println(x + "-0-0-0-0-0-0-0-0-0-0"));
+                        System.out.println(conversationList.getId());
                     }
-                    System.out.println(mUsers.size() + "  " + usersList.size());
+                    System.out.println(mUsers.size() + " ------- ------- ------- " + usersList.size());
                 }
-                userAdapter = new UserFollowerAdapter(getContext(), mUsers, true, true);
-                recyclerView.setAdapter(userAdapter);
+
+
+                userMessagesAdapter = new UserMessagesAdapter(getContext(), mUsers, isDark, true);
+                recyclerView.setAdapter(userMessagesAdapter);
             }
 
             @Override
@@ -165,51 +187,4 @@ public class ChatsFragment extends Fragment {
             }
         });
     }
-
-//    private void readChats() {
-//        mUsers = new ArrayList<>();
-//        reference = FirebaseDatabase.getInstance().getReference("users");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                mUsers.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    User user = snapshot.getValue(User.class);
-//                    UserProfileListItem userProfileListItem = new UserProfileListItem();
-//                    userProfileListItem.setCurrentUserId(firebaseUser.getUid());
-//                    userProfileListItem.setDisplayedUserId(user.getId());
-//                    userProfileListItem.setDisplayedProfilePicture(user.getProfilePictureUrl());
-//                    userProfileListItem.setDisplayedUsername(user.getUsername());
-//                    userProfileListItem.setDisplayedTopicName("");
-//                    userProfileListItem.setDisplayedExperianceLevel("");
-//                    userProfileListItem.setStatus(user.getStatus());
-//
-//                    for (String id : usersList) {
-//                        if (user.getId().equals(id)) {
-//                            if (mUsers.size() != 0) {
-////                                for (ListIterator<UserProfileListItem> iterator = mUsers.listIterator(); iterator.hasNext(); ) {
-////                                    UserProfileListItem user1 = iterator.next();
-////                                    if (!user.getId().equals(user1.getDisplayedUserId())) {
-////                                        mUsers.add(userProfileListItem);
-////                                    }
-////                                }
-////                                for (UserProfileListItem user1 : mUsers){
-////                                        mUsers.add(userProfileListItem);
-////                                    }
-//                            } else {
-//                                mUsers.add(userProfileListItem);
-//                            }
-//                        }
-//                    }
-//                }
-//                userAdapter = new UserFollowerAdapter(getContext(), mUsers, true, true);
-//                recyclerView.setAdapter(userAdapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 }

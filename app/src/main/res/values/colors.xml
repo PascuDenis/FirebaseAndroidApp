@@ -23,7 +23,7 @@
     <color name="toolbar_dark_mode">#80161616</color>
     <color name="toolbar_light_mode">#BF172B3A</color>
 
-    <color name="navigation_dark_mode">#205158</color>
-    <color name="navigation_light_mode">#916A44</color>
+    <color name="navigation_dark_mode">#18363C</color>
+    <color name="navigation_light_mode">#B8B85E</color>
 
 </resources>

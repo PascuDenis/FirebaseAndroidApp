@@ -1,7 +1,8 @@
 package com.example.db.entity;
 
 public class ConversationList {
-    public String id;
+    private String id;
+
 
     public ConversationList(String id) {
         this.id = id;
@@ -16,5 +17,12 @@ public class ConversationList {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "ConversationList{" +
+                "id='" + id + '\'' +
+                '}';
     }
 }

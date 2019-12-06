@@ -7,11 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -19,8 +18,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import com.example.db.R;
-import com.example.db.activities.ProfileNavigationActivity;
-import com.example.db.config.Config;
 import com.google.android.material.navigation.NavigationView;
 
 import static com.example.db.config.Config.getThemeStatePref;
@@ -32,9 +29,9 @@ public class SettingsFragment extends Fragment {
 
     private Toolbar toolbar;
     private Spinner experianceSpinner;
-    private EditText searchPeopleEditText;
+    private TextView searchPeopleEditText;
     private GridLayout gridLayout;
-
+    private boolean isDark;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class SettingsFragment extends Fragment {
         searchPeopleEditText.setEnabled(false);
         experianceSpinner.setEnabled(false);
 
-        boolean isDark = getThemeStatePref(getContext());
+        isDark = getThemeStatePref(getContext());
         if (isDark){
             rootLayout.setBackgroundColor(getResources().getColor(R.color.hf_root_dark_mode));
         }

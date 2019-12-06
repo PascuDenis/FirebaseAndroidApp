@@ -118,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         if (!TextUtils.isEmpty(email) || (!TextUtils.isEmpty(username))) {
-            User user = new User(userId, fullName, username, email, "", "", "", "", 0, 0, new ArrayList<String >(), new ArrayList<Topic>(), "offline");
+            User user = new User(userId, fullName, username, email, "", "", "", "", 0, 0, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), "offline");
 
             repository.create(user);
 //            userDatabase.child(id).setValue(user);

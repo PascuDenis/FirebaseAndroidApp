@@ -59,7 +59,7 @@
     <string name="nrfollowers">nrfollowers</string>
     <string name="following">following</string>
     <string name="back">Back</string>
-    <string name="search_people">Search people</string>
+    <string name="search_people">Search people by topic</string>
     <string name="did_someone_forget_their_password">Did someone forget their password?</string>
     <string name="that_s_okay_just_enter_the_email_address_you_ve_used_to_register_with_and_we_ll_send_you_a_reset_link">That\'s okay... Just enter the email address you\'ve used to register with and we\'ll send you a reset link!</string>
     <string name="submit">Submit</string>
@@ -93,6 +93,8 @@
     <string name="type_a_message">Type a message...</string>
     <string name="search2">Search ...</string>
     <string name="seen">seen</string>
+    <string name="last_text_message">Last text message</string>
+    <string name="like_me">Like me!</string>
 
 
 </resources>

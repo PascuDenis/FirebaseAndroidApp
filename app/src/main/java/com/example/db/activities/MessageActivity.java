@@ -35,6 +35,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.db.config.Config.getThemeStatePref;
 
 public class MessageActivity extends AppCompatActivity {
     private CircleImageView profileImage;
@@ -63,6 +67,7 @@ public class MessageActivity extends AppCompatActivity {
 
     APIService apiService;
     boolean notify = false;
+    boolean isDark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +101,23 @@ public class MessageActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        isDark = getThemeStatePref(getApplicationContext());
+        if (isDark){
+            recyclerView.setBackgroundColor(getResources().getColor(R.color.hf_root_dark_mode));
+        }
+        else {
+            recyclerView.setBackgroundColor(getResources().getColor(R.color.hf_root_light_mode));
+        }
+
         intent = getIntent();
         followerUserId = intent.getStringExtra("GuestUserId");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(followerUserId);
+        if (followerUserId == null){
+            Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(followerUserId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -120,6 +137,7 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +182,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    System.out.println(snapshot);
                     Message message = snapshot.getValue(Message.class);
                     if (message.getReceiver().equals(firebaseUser.getUid()) && message.getSender().equals(userid)) {
                         HashMap<String, Object> hashMap = new HashMap<>();
@@ -182,12 +201,17 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void sentMessage(String sender, String reveiver, String message) {
+
+//        LocalDateTime myDateObj = LocalDateTime.now();
+//        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+//        String formattedDate = myDateObj.format(myFormatObj);
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
         hashMap.put("receiver", reveiver);
         hashMap.put("message", message);
         hashMap.put("isseen", false);
-//        hashMap.put("timeCreated", timeCreated);
+//        hashMap.put("timeCreated", formattedDate);
 
         FirebaseDatabase.getInstance().getReference("messages").push().setValue(hashMap);
 

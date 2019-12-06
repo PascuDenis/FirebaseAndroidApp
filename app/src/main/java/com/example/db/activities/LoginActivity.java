@@ -48,37 +48,49 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         progressBar.setVisibility(View.INVISIBLE);
 
+        editTextEmail.setText("di@gmail.com");
+        editTextPassword.setText("123456");
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (editTextEmail.getText().toString().equals("") || editTextPassword.getText().toString().equals("")) {
+                    Toast.makeText(LoginActivity.this, "The email and password cannot be empty!", Toast.LENGTH_LONG).show();
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    firebaseAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString()).
+                            addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressBar.setVisibility(View.GONE);
+                                    if (task.isSuccessful()) {
+//                                    if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
+//                                        if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
+//                                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                                    } else {
+//                                        Toast.makeText(LoginActivity.this, "Please verify your email address!", Toast.LENGTH_LONG).show();
+//                                    }
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+
+
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
         });
+//        editTextEmail.setText("di@gmail.com");
+//        editTextPassword.setText("123456");
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                firebaseAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(), editTextPassword.getText().toString()).
-                        addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-//                                    if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
-//                                        if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
-//                                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                                    } else {
-//                                        Toast.makeText(LoginActivity.this, "Please verify your email address!", Toast.LENGTH_LONG).show();
-//                                    }
-                                } else {
-                                    Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-            }
-        });
 
         buttonForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,5 +100,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 }

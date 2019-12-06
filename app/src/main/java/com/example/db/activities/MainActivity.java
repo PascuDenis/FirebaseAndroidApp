@@ -24,7 +24,7 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
     private Toolbar toolbar;
-    private EditText toolbarSearchText;
+    private TextView toolbarSearchText;
     private Spinner toolbarSpinner;
 
     private UserRepository repository;
@@ -131,9 +131,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
         databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        System.out.println(firebaseUser);
 
         getUserDetails();
-        emailTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        emailTextView.setText(firebaseUser.getEmail());
 
         isDark = Config.getThemeStatePref(getApplicationContext());
 
@@ -293,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (object.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                                 usernameTextView.setText(object.getUsername());
                                 reputationTextView.setText(String.valueOf(object.getReputationNumber()));
-                                followersTextView.setText(String.valueOf(object.getNrOfFollowers()));
+                                followersTextView.setText(String.valueOf(object.getFollowersList().size()));
                             }
                         }
                     }
@@ -491,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void status(String status){
+    private void status(String status) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);
 

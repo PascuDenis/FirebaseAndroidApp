@@ -20,7 +20,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp">
 
-        <EditText
+        <TextView
             android:id="@+id/search_people_textview"
             style="@style/ThemeOverlay.AppCompat.Dark"
             android:layout_width="match_parent"
@@ -28,11 +28,13 @@
             android:layout_row="0"
             android:layout_column="0"
             android:layout_columnSpan="2"
-            android:layout_gravity="center"
             android:alpha=".60"
             android:backgroundTint="@android:color/white"
+            android:completionHint="@string/search_people"
+            android:completionThreshold="2"
             android:drawableStart="@drawable/ic_search_black_24dp"
             android:drawableTint="@android:color/white"
+            android:gravity="center_vertical"
             android:hint="@string/search_people"
             android:imeOptions="actionSearch"
             android:inputType="text"

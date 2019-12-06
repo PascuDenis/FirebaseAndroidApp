@@ -19,9 +19,9 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.db.R;
-import com.example.db.config.Config;
 import com.example.db.entity.User;
 import com.example.db.adapter.UserFollowerAdapter;
 import com.example.db.recyclerview.UserProfileListItem;
@@ -34,12 +34,16 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static com.example.db.config.Config.getThemeStatePref;
 
 public class FollowersFragment extends Fragment {
 
     private Spinner experianceSpinner;
-    private EditText searchPeopleEditText;
+    private TextView searchPeopleEditText;
     private Toolbar toolbar;
     private GridLayout gridLayout;
 
@@ -76,24 +80,26 @@ public class FollowersFragment extends Fragment {
         recyclerView = root.findViewById(R.id.followers_recyclerView);
         rootLayout = root.findViewById(R.id.followers_fragment_root_layout);
 
+        listItemList = new ArrayList<>();
+//        adapter = new UserFollowerAdapter(getContext(), listItemList, isDark, false);
+//        recyclerView.setAdapter(adapter);
+
         button = root.findViewById(R.id.button);
 
-        isDark = Config.getThemeStatePref(getContext());
+        isDark = getThemeStatePref(getContext());
         if (isDark) {
-//            rootLayout.setBackgroundColor(getResources().getColor(R.color.hf_root_dark_mode));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_dark_mode));
+            recyclerView.setBackgroundColor(getResources().getColor(R.color.hf_root_dark_mode));
             rootLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hf_root_dark_background));
-
         } else {
-//            rootLayout.setBackgroundColor(getResources().getColor(R.color.hf_root_light_mode));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_light_mode));
+            recyclerView.setBackgroundColor(getResources().getColor(R.color.hf_root_light_mode));
             rootLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hf_root_light_background));
         }
+
+        readFollowers();
 
         search_followers.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -106,89 +112,143 @@ public class FollowersFragment extends Fragment {
 
             }
         });
-
-        readFollowers();
-
         return root;
     }
 
     private void searchFollowers(String string) {
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        recyclerView.setAdapter(null);
+
+        if (string.equals("")) {
+            return;
+        }
+
         Query query = FirebaseDatabase.getInstance().getReference("users").orderByChild("username")
                 .startAt(string)
                 .endAt(string + "\uf8ff");
 
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listItemList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    User user = snapshot.getValue(User.class);
+        FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid()).child("followersList")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        listItemList = new ArrayList<>();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String followerId = String.valueOf(snapshot.getValue());
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                        User follower = snapshot1.getValue(User.class);
+                                        if (follower.getId().equals(followerId)) {
+                                            System.out.println(follower);
+                                            UserProfileListItem displayedUser = new UserProfileListItem(
+                                                    firebaseUser.getUid(),
+                                                    follower.getId(),
+                                                    follower.getProfilePictureUrl(),
+                                                    follower.getFullName(),
+                                                    follower.getStatus());
+                                            listItemList.add(displayedUser);
+                                        }
+                                    }
+                                    adapter = new UserFollowerAdapter(getContext(), listItemList, isDark, false);
+                                    recyclerView.setAdapter(adapter);
+                                }
 
-                    assert user != null;
-                    assert firebaseUser != null;
-                    if (!user.getId().equals(firebaseUser.getUid())){
-                        UserProfileListItem displayedUser = new UserProfileListItem(
-                                firebaseUser.getUid(),
-                                user.getId(),
-                                user.getProfilePictureUrl(),
-                                user.getFullName(),
-                                "offline");
-                        listItemList.add(displayedUser);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                     }
-                }
-                adapter = new UserFollowerAdapter(getContext(), listItemList, isDark, false);
-                recyclerView.setAdapter(adapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void readFollowers() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recyclerView.setAdapter(null);
+
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("followersList")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        List<String> followersIdList = new ArrayList<>();
+                        Set<String> followersSet = new HashSet<>();
+                        listItemList = new ArrayList<>();
 
-                        for (DataSnapshot followerIdsnapshot : dataSnapshot.getChildren()) {
-                            String currentFollowerId = String.valueOf(followerIdsnapshot.getValue());
-                            System.out.println(currentFollowerId);
-                            FirebaseDatabase.getInstance().getReference("users")
+                        for (DataSnapshot followerIdSnapshot : dataSnapshot.getChildren()) {
+                            String currentFollowerId = String.valueOf(followerIdSnapshot.getValue());
+                            followersIdList.add(currentFollowerId);
+                        }
+
+                        for (String followerId : followersIdList) {
+                            FirebaseDatabase.getInstance().getReference("users").orderByChild("username")
                                     .addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            listItemList = new ArrayList<>();
-                                            if (search_followers.getText().toString().equals("")) {
-                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                    User object = snapshot.getValue(User.class);
-                                                    if (object.getId().equals(currentFollowerId)) {
-                                                        System.out.println(snapshot.getKey() + "--------------------" + object.getId());
-//                                                    if (object.getid().equals(currentFollowerId)) {
-                                                        UserProfileListItem displayedUser = new UserProfileListItem(
-                                                                currentUserId,
-                                                                object.getId(),
-                                                                object.getProfilePictureUrl(),
-                                                                object.getFullName(),
-                                                                "offline"
-                                                        );
-                                                        listItemList.add(displayedUser);
-                                                        break;
-                                                    }
-                                                    adapter = new UserFollowerAdapter(getContext(), listItemList, isDark, false);
-                                                    System.out.println("2222222222222222222 adapter " + listItemList.size());
-                                                    recyclerView.setAdapter(adapter);
+                                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                User object = snapshot.getValue(User.class);
+                                                if (object.getId().equals(followerId)) {
+                                                    System.out.println(snapshot.getKey() + "--------------------");
+                                                    UserProfileListItem displayedUser = new UserProfileListItem(
+                                                            currentUserId,
+                                                            object.getId(),
+                                                            object.getProfilePictureUrl(),
+                                                            object.getFullName(),
+                                                            object.getStatus()
+                                                    );
+                                                    followersSet.add(displayedUser.getDisplayedUserId());
                                                 }
                                             }
+
+                                            List<UserProfileListItem> someList = new ArrayList<>();
+                                            followersSet.forEach(x -> {
+                                                FirebaseDatabase.getInstance().getReference().child("users")
+                                                        .addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                                    User object = snapshot.getValue(User.class);
+                                                                    if (object.getId().equals(x)) {
+                                                                        System.out.println(snapshot.getKey() + "--------------------");
+                                                                        UserProfileListItem displayedUser = new UserProfileListItem(
+                                                                                currentUserId,
+                                                                                object.getId(),
+                                                                                object.getProfilePictureUrl(),
+                                                                                object.getFullName(),
+                                                                                object.getStatus()
+                                                                        );
+                                                                        someList.add(displayedUser);
+                                                                    }
+                                                                }
+                                                                adapter = new UserFollowerAdapter(getContext(), someList, isDark, false);
+                                                                System.out.println("2222222222222222222 FF_READ_adapter " + someList.size());
+                                                                recyclerView.setAdapter(adapter);
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+                                            });
                                         }
+
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                         }
                                     });
                         }
@@ -198,6 +258,7 @@ public class FollowersFragment extends Fragment {
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
+
                 });
     }
 

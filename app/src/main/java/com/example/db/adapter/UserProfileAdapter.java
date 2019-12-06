@@ -168,7 +168,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
             popupNrReputation = dialog.findViewById(R.id.popup_reputation_number);
 
             txtclose = dialog.findViewById(R.id.textviewclose);
-            btnFollow = dialog.findViewById(R.id.btnfollow);
+            btnFollow = dialog.findViewById(R.id.btnLike);
             btnSendMessage = dialog.findViewById(R.id.btnsendmessage);
 
 
@@ -232,7 +232,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
         }
 
         private void hasFollower(String currentUserId, String followedUserId) {
-            Button btnFollow = dialog.findViewById(R.id.btnfollow);
+            Button btnFollow = dialog.findViewById(R.id.btnLike);
             FirebaseDatabase.getInstance().getReference().child("users")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -257,7 +257,6 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
     }
 
     private void addFollower(String currentUserId, String followerId) {
-        boolean succeded = false;
         System.out.println(currentUserId + "    - - - - - - -  --  " + followerId);
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users");
         FirebaseDatabase.getInstance().getReference().child("users")

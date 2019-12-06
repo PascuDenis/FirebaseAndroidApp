@@ -1,9 +1,5 @@
 package com.example.db.activities.fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.developer.kalert.KAlertDialog;
 import com.example.db.R;
 import com.example.db.activities.MainActivity;
-import com.example.db.activities.ProfileNavigationActivity;
 import com.example.db.config.Config;
 import com.example.db.entity.ExperianceLevel;
 import com.example.db.entity.Topic;
@@ -71,7 +66,7 @@ public class UpdateProfileFragment extends Fragment {
 
     private Toolbar toolbar;
     private Spinner experianceSpinner;
-    private EditText searchPeopleEditText;
+    private TextView searchPeopleEditText;
     private GridLayout gridLayout;
 
     private boolean isDark;
@@ -229,7 +224,7 @@ public class UpdateProfileFragment extends Fragment {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             User object = snapshot.getValue(User.class);
                             if (object.getEmail().equals(email)) {
-                                repository.update(new User(object.getId(), name, username, email, city, country, education, "", 0, 0, new ArrayList<>(), topics, "offline"));
+                                repository.update(new User(object.getId(), name, username, email, city, country, education, "", 0, 0, new ArrayList<>(), new ArrayList<>(),topics, "offline"));
                                 System.out.println(object.getId() + "----------------------------");
                             }
                         }

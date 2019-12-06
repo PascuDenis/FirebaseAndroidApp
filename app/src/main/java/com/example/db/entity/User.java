@@ -16,6 +16,7 @@ public class User {
     private Integer nrOfFollowers;
     private Integer reputationNumber;
     private List<String> followersList;
+    private List<String> reputationList;
     private List<Topic> topicsList;
     private String status;
 
@@ -45,6 +46,7 @@ public class User {
                 Integer nrOfFollowers,
                 Integer nrOfFollowing,
                 List<String> followersList,
+                List<String> reputationList,
                 List<Topic> topicsList,
                 String status) {
         this.id = id;
@@ -59,6 +61,7 @@ public class User {
         this.nrOfFollowers = nrOfFollowers;
         this.reputationNumber = nrOfFollowing;
         this.followersList = followersList;
+        this.reputationList = reputationList;
         this.topicsList = topicsList;
         this.status = status;
     }
@@ -157,6 +160,14 @@ public class User {
 
     public void setFollowersList(List<String> followersList) {
         this.followersList = followersList;
+    }
+
+    public List<String> getReputationList() {
+        return reputationList;
+    }
+
+    public void setReputationList(List<String> reputationList) {
+        this.reputationList = reputationList;
     }
 
     public List<Topic> getTopicsList() {

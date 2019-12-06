@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private Spinner experianceSpinner;
-    private EditText searchPeopleEditText;
+    private AutoCompleteTextView searchPeopleEditText;
     private Toolbar toolbar;
     private GridLayout gridLayout;
 
@@ -49,6 +50,7 @@ public class HomeFragment extends Fragment {
     private static Bundle bundleRecyclerViewState;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+    private ArrayAdapter<String> topicAdapter;
     boolean isDark = false;
     private CoordinatorLayout rootLayout;
     private Parcelable recyclerViewState;
@@ -87,6 +89,24 @@ public class HomeFragment extends Fragment {
             rootLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hf_root_light_background));
         }
 
+
+        FirebaseDatabase.getInstance().getReference("topicNames").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> topicNames = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    topicNames.add(String.valueOf(snapshot.getValue()));
+                }
+                topicAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, topicNames);
+                searchPeopleEditText.setAdapter(topicAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         searchPeopleEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -120,7 +140,7 @@ public class HomeFragment extends Fragment {
                                                     currentUserId,
                                                     object.getId(),
                                                     object.getProfilePictureUrl(),
-                                                    object.getId(),
+                                                    object.getUsername(),
                                                     String.valueOf(topic.getTopicNames()),
                                                     String.valueOf(topic.getExperianceLevel()),
                                                     "offline"

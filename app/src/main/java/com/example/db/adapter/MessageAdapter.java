@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,8 +22,8 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
-    public static final int MSG_TYPE_LEFT = 0;
-    public static final int MSG_TYPE_RIGHT = 1;
+    protected static final int MSG_TYPE_LEFT = 0;
+    private static final int MSG_TYPE_RIGHT = 1;
 
     private FirebaseUser firebaseUser;
 
@@ -30,7 +31,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private List<Message> chatList;
     private String imageUrl;
 
-    boolean isDark = false;
+    private boolean isDark = false;
 
     public MessageAdapter(Context context, List<Message> messagesListItems, String imageUrl, boolean isDark) {
         this.chatList = messagesListItems;
@@ -59,7 +60,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         holder.show_message.setText(chat.getMessage());
 
-
         Picasso.get().load(imageUrl).into(holder.circleImageViewUserProfilePicture);
 
         if (position == chatList.size()-1){
@@ -79,13 +79,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return chatList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView circleImageViewUserProfilePicture;
-        public TextView show_message;
-        public TextView text_seen;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        CircleImageView circleImageViewUserProfilePicture;
+        TextView show_message;
+        TextView text_seen;
 
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             circleImageViewUserProfilePicture = itemView.findViewById(R.id.profile_image);

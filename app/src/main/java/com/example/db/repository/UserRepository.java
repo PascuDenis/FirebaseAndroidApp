@@ -30,6 +30,7 @@ public class UserRepository implements ICRUDRepository<User, String> {
     @Override
     public void create(User user) {
         List<String> users = new ArrayList<>();
+        List<String> reputations = new ArrayList<>();
         List<Topic> topics = new ArrayList<>();
         user.setEducation("");
         user.setProfilePictureUrl("");
@@ -38,6 +39,7 @@ public class UserRepository implements ICRUDRepository<User, String> {
         user.setNrOfFollowers(0);
         user.setReputationNumber(0);
         user.setFollowersList(users);
+        user.setReputationList(reputations);
         user.setTopicsList(topics);
         userDatabaseReference.child(user.getId()).setValue(user);
     }
